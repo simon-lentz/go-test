@@ -10,7 +10,7 @@ import (
 )
 
 type Entity struct {
-	KnownAs            string `json:"knownAs"` // Affects YAML field names too.
+	KnownAs            string `json:"knownAs,omitempty"` // Affects YAML field names too.
 	Ownership          string `json:"ownership"`
 	OrganizationalForm string `json:"organizationalForm"`
 	Description        string `json:"description"`
@@ -114,16 +114,16 @@ type Regulation struct {
 }
 
 type Place struct {
-	KnownAs             string    `json:"knownAs"`
-	Description         string    `json:"description"`
-	State               string    `json:"state"`
-	City                string    `json:"city"`
-	InternationalRegion string    `json:"internationalRegion"`
-	MultistateRegion    string    `json:"multistateRegion"`
-	GridCoordinates     []float32 `json:"gridCoordinates"`
-	Comment             string    `json:"comment"`
-	Country             string    `json:"country"`
-	County              string    `json:"county"`
+	KnownAs             string     `json:"knownAs"`
+	Description         string     `json:"description"`
+	State               string     `json:"state"`
+	City                string     `json:"city"`
+	InternationalRegion string     `json:"internationalRegion"`
+	MultistateRegion    string     `json:"multistateRegion"`
+	GridCoordinates     [2]float32 `json:"gridCoordinates"`
+	Comment             string     `json:"comment"`
+	Country             string     `json:"country"`
+	County              string     `json:"county"`
 }
 
 type GovernmentAuthority struct {
@@ -144,7 +144,7 @@ type GovernmentAuthority struct {
 type EDGE struct {
 	BUSINESS_RELATIONSHIP_WITH_Entity struct {
 		businessRelationshipType string
-		WHERE                    string //"#REF_TO_ENTITY"
+		WHERE                    string //"#REF_TO_ENTITY", will use KnownAs as common value
 	}
 	ADOPTED_Initiative struct {
 		adoptionDate string
@@ -203,6 +203,17 @@ type EDGE struct {
 	}
 }
 
+type Graph struct {
+	Entities              []Project
+	Services              []Service
+	Projects              []Project
+	Initiatives           []Initiative
+	Regulations           []Regulation
+	Places                []Place
+	GovernmentAuthorities []GovernmentAuthority
+	EDGES                 []EDGE
+}
+
 func Convert() string {
 	// Marshal an Entity struct to YAML.
 	DTE := Entity{"DTE", "private member", "for-profit corporate", "", "", "State", "Electric Power", "Delaware Total Power", false, true}
@@ -221,24 +232,3 @@ func Convert() string {
 	fmt.Println(DelawareTotalPower)
 	return "test complete"
 }
-
-/*
-#REF_TO_ENTITY: {
-	knownAs: *"" | string
-}
-#REF_TO_INITIATIVE: {
-	knownAs: *"" | string
-}
-#REF_TO_PLACE: {
-	knownAs: *"" | string
-}
-#REF_TO_PROJECT: {
-	knownAs: *"" | string
-}
-#REF_TO_REGULATION: {
-	knownAs: *"" | string
-}
-#REF_TO_SERVICE: {
-	knownAs: *"" | string
-}
-*/

@@ -1,0 +1,11 @@
+Entity: 
+  knownAs: "Tennessee Valley Authority"
+  ownership: "public investors"
+  organizationalForm: "consortium"
+  description: "A public water authority"
+  comment: "Regulates multi-state region"
+  governmental: "regional"
+  domain: "electric power"
+  name: "Tennessee Valley Authority"
+  endUser: false
+  serviceProvider: true
