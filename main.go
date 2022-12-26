@@ -1,11 +1,13 @@
 package main
 
 import (
-	"github.com/wyrth-io/go-test/internal/yaml"
+	"fmt"
+
 	methods "github.com/wyrth-io/go-test/sandbox"
 )
 
 func main() {
-	yaml.Convert()
-	methods.SetEDGE("Simon", "13 Poplar", "RESIDENT_OF_Residence")
+	personNode, residenceNode, edge := methods.PopulateGraph("Simon", "NY")
+	fmt.Println(personNode, residenceNode, edge)
+	fmt.Println(methods.DrawGraph())
 }
