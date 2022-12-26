@@ -1,11 +1,11 @@
 package main
 
 import (
-	"github.com/wyrth-io/go-test/basic"
-	"github.com/wyrth-io/go-test/yaml"
+	"github.com/wyrth-io/go-test/internal/yaml"
+	methods "github.com/wyrth-io/go-test/sandbox"
 )
 
 func main() {
 	yaml.Convert()
-	basic.SetEDGE("Simon", "13 Poplar", "RESIDENT_OF_Residence")
+	methods.SetEDGE("Simon", "13 Poplar", "RESIDENT_OF_Residence")
 }

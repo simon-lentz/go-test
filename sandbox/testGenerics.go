@@ -1,10 +1,7 @@
-package basic
+package sandbox
 
 import (
-	"fmt"
-	"log"
-
-	"github.com/ghodss/yaml"
+	"sync"
 )
 
 type Person struct {
@@ -13,15 +10,6 @@ type Person struct {
 	Occupation            string `json:"occupation"`
 	LikesChocolate        bool   `json:"likesChocolate"`
 	RESIDENT_OF_Residence string
-}
-
-// setName receives a pointer to Person so it can set field values.
-func (p *Person) setName(name string) {
-	p.Name = name
-}
-
-func (p Person) getName() string {
-	return p.Name
 }
 
 type Residence struct {
@@ -33,12 +21,33 @@ type Residence struct {
 	Prewar       bool   `json:"prewar"`
 }
 
-func (r *Residence) setResidentName(name string) {
-	r.ResidentName = name
+type EDGE struct {
+	RESIDENT_OF_Residence Reference[string]
 }
 
-type EDGE struct {
-	RESIDENT_OF_Residence string
+// Generic type Reference will link the Person and Residence nodes.
+type Reference[T any] struct {
+	sync.Mutex
+	Data T
+}
+
+func (p *Person) Ref() {
+	var ref Reference[[]string]
+	ref.Lock()
+	ref.Data = append(ref.Data, p.Name)
+}
+
+// setName receives a pointer to Person so it can set field values.
+func (p *Person) setName(name string) {
+	p.Name = name
+}
+
+func (p Person) getName() string {
+	return p.Name
+}
+
+func (r *Residence) setResidentName(name string) {
+	r.ResidentName = name
 }
 
 func SetEDGE(person string, residence string, edge string) {
@@ -46,7 +55,6 @@ func SetEDGE(person string, residence string, edge string) {
 	// and a new edge connecting the person and residence.
 	newPerson := Person{}
 	newResidence := Residence{}
-	newEdge := EDGE{}
 
 	// Use the setName function to assign a name to the new person.
 	newPerson.setName("Simon")
@@ -58,24 +66,5 @@ func SetEDGE(person string, residence string, edge string) {
 	// to set the new residence's resident name field to the new person's name.
 	newResidence.setResidentName(name)
 
-	// Link the person and residence node with their common feature: newPerson.Name == newResidence.ResidentName
-	newEdge.RESIDENT_OF_Residence = newResidence.ResidentName
-}
-
-func Unmarshal() string {
-	// Marshal an Entity struct to YAML.
-	simon := Person{}
-	y, err := yaml.Marshal(simon)
-	if err != nil {
-		log.Print(err.Error())
-	}
-	fmt.Println(string(y))
-
-	// Unmarshal the YAML back into an Entity struct.
-	err = yaml.Unmarshal(y, &simon)
-	if err != nil {
-		log.Print(err.Error())
-	}
-	fmt.Println(simon)
-	return "test complete"
+	// Link the person and residence node with their common feature, Person.Name and Residence.ResidentName
 }
